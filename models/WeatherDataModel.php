@@ -21,6 +21,22 @@ class WeatherDataModel {
 	}
 
 	/**
+	 * Vraag data van meerdere stations tegelijk op
+	 * param: array
+	 * returns: array
+	 * */
+	public function getMultipleStationData($stationIDs){
+		if (gettype($stationIDs) != "array") return null;	// Return null if not array.
+		$stationsData = [];
+		foreach ($stationIDs as $stationID) {
+			foreach ($this->getStationData($stationID) as $stationData) {
+				array_push($stationsData, $stationData);
+			}
+		}
+		return $stationsData;
+	}
+
+	/**
 	 * Returned station data op basis van station ID van de huidige file.
 	**/
 	public function getStationData($stationID) {

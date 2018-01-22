@@ -1,16 +1,3 @@
 <?php
-$url = 'localhost';
-$database = 'unwdmi';
-$username = 'root';
-$password = '';
-
-$conn = mysqli_connect($url, $username, $password, $database);
-
-// Check connection
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-}
-
-
-
+$db = mysqli_connect("localhost", "root", "", "unwdmi") or die("At this moment, no valid database connection can be found. Please try again later!");
 ?>

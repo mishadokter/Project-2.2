@@ -21,7 +21,7 @@ include '../inc/database.php';
 		}
 		
 		else {
-			echo "Invalid username and/or password";
+			echo "Invalid username and/or password <br> <a href='../login.php'> Go back </a>";
 		}
 		
 	}

@@ -1,14 +1,8 @@
 <?php // Head 
 	include 'inc/head.php';
-	include 'models/WeatherDataModel.php';
-?>
-<body class="wrapper">
-  
-  <div class="header">
-	<a href="index.php"><img src="img/Dutchsat.png" alt="Not found"/></a>
-  </div>
-  
-  <?php include 'inc/nav.php'; ?>
+	// include 'models/WeatherDataModel.php';
+	include 'inc/nav.php'; ?>
+	
 	  <div class="footer">
 		<h1 class="pageTitle">Lorem Ipsum</h1>
 		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc nulla massa, finibus id urna quis, mattis consectetur tortor. 
@@ -21,8 +15,8 @@
 	  </div>
   
 	<?php
-		$interpreter = new WeatherDataModel('data.dat');
-		var_dump($interpreter->getMultipleStationData(["080290", "252820"]));
+		// $interpreter = new WeatherDataModel('data.dat');
+		// var_dump($interpreter->getMultipleStationData(["080290", "252820"]));
 	?>
   
 </body>

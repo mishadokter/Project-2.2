@@ -9,6 +9,11 @@
 				<input type="password" name="password" placeholder="Password" required>
 				<input type="submit" name="login" class="submitForm" value="Login">
 			</form>
+			<?php
+				if(isset($_GET['logout'])) {
+					@session_destroy();
+					header("location: login.php");
+				} ?>
 		</div>
 	</div>
 </body>

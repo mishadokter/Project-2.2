@@ -5,23 +5,20 @@ include '../inc/database.php';
 		$username = $_POST['username'];
 		$password = $_POST['password'];
 		
-		$query 	  = "SELECT id, username, password, level FROM users WHERE username='$username' AND password='$password'";
+		$query 	  = "SELECT id, username, password FROM users WHERE username='$username' AND password='$password'";
 		$result   = mysqli_query($db, $query) or die (mysqli_error($db));
 		$count    = mysqli_num_rows($result);
 		$row	  = mysqli_fetch_assoc($result);
-		$level	  = $row["level"];
 		
-		// store session data
-		@session_start();
-		$_SESSION['login'] = true;
-		$_SESSION['level'] = $level;
-		
-		if ($level == 1) {
-			header("location: ../level1.php");
+		if (!$row) {
+			echo "Invalid username and/or password <br> <a href='../login.php'> Go back </a>";
 		}
 		
 		else {
-			echo "Invalid username and/or password <br> <a href='../login.php'> Go back </a>";
+			// store session data
+			@session_start();
+			$_SESSION['login'] = true;
+			header("location: ../level1.php");
 		}
 		
 	}

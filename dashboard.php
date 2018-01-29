@@ -8,7 +8,7 @@
 	include 'inc/nav.php'; ?>
 	
 	  <div class="footer">
-		<h1 class="pageTitle">Lorem Ipsum</h1>
+		<h1 class="pageTitle">Dashboard</h1>
 		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc nulla massa, finibus id urna quis, mattis consectetur tortor. 
 		Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed lobortis metus vel pretium sagittis.
 		Vestibulum consectetur arcu mi, a pulvinar nisi consequat id. Aliquam erat volutpat. Donec sagittis dui tortor, non convallis augue vehicula vitae. 

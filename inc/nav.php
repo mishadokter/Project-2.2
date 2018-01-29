@@ -7,14 +7,12 @@ error_reporting( error_reporting() & ~E_NOTICE ); //Hides the "variable not defi
 	<?php
 	if($_SESSION['login']) { ?>
 	<ul class="navigation">
-		<li><a href="index.php" title="">Home</a></li>
-		<li><a href="#" title="">Ipsum</a></li>
+		<li><a href="dashboard.php" title="">Dashboard</a></li>
 		<li><a href="#" title="">Graphs</a>
 		  <ul>
 			<li><a href="#" title="">Foo</a></li>
 			<li><a href="#" title="">Bar</a></li>
 			<li><a href="#" title="">Foobar</a></li>
-			<li><a href="#" title="">Line graph</a></li>
 		  </ul>
 		</li>		
 		<li><a href="login.php?logout">Logout</a></li>

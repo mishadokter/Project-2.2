@@ -19,7 +19,7 @@
 		Our weatherservice contains 230 countries/regions and 8000 weather stations </p>
 	  </div>
 	  
-	  <form action="" method="POST">
+	  <form action="graphexample.php" method="POST">
 	  <select name="selected_country" style='font-family: "Roboto", sans-serif; outline: 0; background: #f2f2f2; width: 100%; border: 150px; margin: 0 0 15px; 
 	  padding: 15px; box-sizing: border-box; font-size: 14px'required>
 		<option value=""> --- Choose a country or region --- </option>

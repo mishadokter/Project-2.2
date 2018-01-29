@@ -159,3 +159,8 @@ select .selected_Country{
   box-sizing: border-box;
   font-size: 14px;
 }
+
+#testchart{
+  max-width: 600px;
+  max-height: 700px;
+}

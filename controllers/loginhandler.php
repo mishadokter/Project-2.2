@@ -9,6 +9,7 @@ include '../inc/database.php';
 		$result   = mysqli_query($db, $query) or die (mysqli_error($db));
 		$count    = mysqli_num_rows($result);
 		$row	  = mysqli_fetch_assoc($result);
+		$user_id = $row['id'];
 		
 		if (!$row) {
 			echo "Invalid username and/or password <br> <a href='../login.php'> Go back </a>";
@@ -18,7 +19,8 @@ include '../inc/database.php';
 			// store session data
 			@session_start();
 			$_SESSION['login'] = true;
-			header("location: ../level1.php");
+			$_SESSION['user_id'] = $user_id;
+			header("location: ../dashboard");
 		}
 		
 	}

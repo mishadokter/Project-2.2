@@ -24,7 +24,8 @@
 	  padding: 15px; box-sizing: border-box; font-size: 14px'required>
 		<option value=""> --- Choose a country or region --- </option>
             <?php 
-			$query= $db->query("SELECT country from stations GROUP BY country");
+            $user_id = $_SESSION['user_id'];
+			$query= $db->query("SELECT country from stations INNER JOIN user_stations ON user_stations.station_id=stations.stn WHERE user_id = $user_id");
              while ($rows = $query->fetch_array(MYSQLI_ASSOC)) {
                 $value= $rows['country']; ?>
                 <option value="<?= $value?>" ><?= $value?></option>

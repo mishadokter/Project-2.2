@@ -20,15 +20,16 @@ $weatherModel->interp("720340201801181701481005310074100471027000911730000000010
 
 
 <script>
-	$.getJSON("/api/test.php", function(result)){
+	$.getJSON("/Project2-2/api/test.php", function(result){
+		console.log(result);
 		var ctx = $("#testchart");
 		var myChart = new Chart(ctx, {
-			type: "bar",
+			type: "line",
 			responsive: true,
 			data: {
-				labels: [1, 2, 3, 4, 5, 7],
+				labels: result[0],
 				datasets: [{
-					data: [12,4,6,6,4,6,],
+					data: result[1],
 					label: "test data",
 					borderwidth: 1
 				}]
@@ -45,7 +46,7 @@ $weatherModel->interp("720340201801181701481005310074100471027000911730000000010
 	    	}
 		}
 	
-	});
+	)});
 </script>
 </body>
 </html>

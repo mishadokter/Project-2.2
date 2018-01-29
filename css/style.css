@@ -160,7 +160,36 @@ select .selected_Country{
   font-size: 14px;
 }
 
-#testchart{
-  max-width: 600px;
-  max-height: 700px;
+/*-- Buttons style --*/
+
+/* button div */
+#buttons {
+  padding-top: 10px;
+  text-align: left;
+}
+
+.btn {
+    border-radius: 5px;
+    padding: 10px 18px;
+    font-size: 15px;
+    text-decoration: none;
+    margin: 0px 10px 20px 0px;
+    color: #fff;
+    position: relative;
+    display: inline-block;
+}
+
+.btn:active {
+  transform: translate(0px, 5px);
+  -webkit-transform: translate(0px, 5px);
+  box-shadow: 0px 1px 0px 0px;
+}
+
+.blue {
+  background-color: #55acee;
+  box-shadow: 0px 5px 0px 0px #3C93D5;
+}
+
+.blue:hover {
+  background-color: #6FC6FF;
 }

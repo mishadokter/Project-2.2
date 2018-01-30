@@ -2,7 +2,7 @@
 include 'models/WeatherDataModel.php';
 
 $weatherModel = new WeatherDataModel();
-$weatherModel->interp("7203402018011817014810053100741004710270009117300000000100000464124;");
+$weatherModel->interp("124807-002-059099461018301040640016044111000826325;");
 
 ?>
 

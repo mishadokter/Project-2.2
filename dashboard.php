@@ -18,7 +18,7 @@
 	while($row = $result->fetch_assoc()) {
 		
 		$username		= $row["username"];
-		$country      	= $row["country"];
+		$country      		= $row["country"];
 		$region			= $row["name"];
 	}
 	?>

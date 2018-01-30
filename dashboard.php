@@ -6,26 +6,10 @@
 	@session_start();
 	if($_SESSION['login']) {
 	include 'inc/nav.php'; 
-	
-	// Start with fetching data from the database
-	$sql = "SELECT username, name, country, user_stations.user_id AS user_id, user_stations.station_id AS station_id
-			FROM stations, users, user_stations
-			WHERE user_stations.user_id = users.id
-			AND user_stations.station_id = stations.stn";
-	
-	$result = $db->query($sql);
-	
-	while($row = $result->fetch_assoc()) {
-		
-		$username		= $row["username"];
-		$country      		= $row["country"];
-		$region			= $row["name"];
-	}
 	?>
 	
 	  <div class="footer">
 		<h1 class="pageTitle">Dashboard</h1>
-		<p> <?php echo "Welcome $username from $region, $country"; ?> </p>
 		<p>
 			<div id="buttons">
 				  <a href="dashboard.php?line1" class="btn blue">Line graph 1</a>
@@ -58,11 +42,11 @@
 		<option value=""> --- Choose a country or region --- </option>
             <?php 
 			$user_id = $_SESSION['user_id'];
-			$query= $db->query("SELECT country from stations INNER JOIN user_stations ON user_stations.station_id=stations.stn WHERE user_id = $user_id");
+			$query= $db->query("SELECT country from stations INNER JOIN user_stations ON user_stations.station_id=stations.stn WHERE user_id = $user_id ORDER BY country ASC");  
              while ($rows = $query->fetch_array(MYSQLI_ASSOC)) {
-                $value= $rows['country']; ?>
+                 $value= $rows['country']; ?>
                 <option value="<?= $value?>" ><?= $value?></option>
-                <?php } ?>
+                <?php  } ?>
              </select>
 				<input type="submit" name="login" class="selected_Country" value="Submit!">
 			 </form>

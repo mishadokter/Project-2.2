@@ -19,6 +19,7 @@ class WeatherDataModel {
 			"thunder" => [42, 1],
 			"tornado" => [43, 1] 
 		];
+		$this->directory = "/home/dutchsat/sync/data/";
 	}
 
 	public function dump()
@@ -54,42 +55,48 @@ class WeatherDataModel {
 	}
 
 	/**
-	 * Returned stationdata in JSON format
-	 * @param integer $stationID 
-	 * @return json
-	 */
-	public function getStationDataJson($stationID)
-	{
-		$data = $this->getStationData($stationID);
+	 * Returned station data op basis van station ID van de huidige file.
+	**/
+	public function getStationData($stationID, $fromdate, $todate, $type) {
+			$date1 = new DateTime($fromdate);
+			$date2 = new DateTime($todate);
+
+			$interval = DateInterval::createFromDateString('1 day');
+			$period = new DatePeriod($date1, $interval, $date2);
+
+			$dataBlocks = array();
+
+		// Loop over all datums en zoek in de files voor datablocks.
+		foreach ($period as $readDate) {
+			$readDate = $readDate->format("Y-m-d");
+			array_push($dataBlocks, $this->readfile($readDate, $stationID)); 		// Datablocks in array.
+		}
+		var_dump($dataBlocks);
+		$data = interp($dataBlocks);
+		// Index of $type in $data. bijv temp geeft temperatuur  als index.
+		return $dataBlocks;
 	}
 
 	/**
-	 * Returned station data op basis van station ID van de huidige file.
+	 * Open data file by filename and return it's datablocks
 	**/
-	public function getStationData($stationID) {
-		$dataBlocks = $this->readfile($this->filename); 	// Datablocks in array.
-		$stationData = [];	// Init stationdata array
-
-		foreach ($dataBlocks as $dataBlock) {	// Loop over alle stationdata en filter alle stationdata met StationID
-			//echo $dataBlock."<br>";
-			if (strcmp(substr($dataBlock, 2, 6), $stationID) == 0)
-			{
-				array_push($stationData, $dataBlock);
+	private function readfile($filename, $station) {
+		$dataBlocks = array();
+		$filename = $this->directory.$station."/".$filename.".dat";
+		if(file_exists($filename))
+		{
+			echo "Reading: ".$filename;
+			$handle = fopen($filename, "r") or die ("Unable to open file" . $filename);		// Open file handle
+			$dataBlocks = [];
+			if ($handle) {
+				while(!feof($handle)) 	// Terwijl het geen end of file is...
+				{
+					$dd = fgets($handle);	// Lees de file line for line.
+					$dataBlocks = explode(';', $dd);	// Split op ;
+				}
 			}
 		}
-		return $stationData;
-	}
-
-	private function readfile($filename) {
-		$handle = fopen($filename, "r") or die ("Unable to open file" . $filename);		// Open file handle
-		$dataBlocks = [];
-		if ($handle) {
-			while(!feof($handle)) 	// Terwijl het geen end of file is...
-			{
-				$dd = fgets($handle);	// Lees de file line for line.
-				$dataBlocks = explode(';', $dd);	// Split op ;
-			}
-		}
+		
 		return $dataBlocks;
 	}
 
@@ -110,11 +117,8 @@ class WeatherDataModel {
 			}else {
 				array_push($dataArray, (int)(substr($datablock, $offset[0], $offset[1])));
 			}
-
-			
-
 		}
-		echo json_encode($dataArray);
+		return($dataArray);
 	}
 }
 

@@ -19,6 +19,23 @@ class WeatherDataModel {
 			"thunder" => [42, 1],
 			"tornado" => [43, 1] 
 		];
+		// Deze array wordt gebruikt om de index te bepalen van de bovenstaande array.
+		$this->typeIndexes = [
+			"time",
+			"temp",
+			"dewp",
+			"stp",
+			"slp",
+			"visb",
+			"wdsp",
+			"prcp",
+			"sndp",
+			"frost",
+			"rain",
+			"hail",
+			"thunder",
+			"tornado"
+		];
 		$this->directory = "/home/dutchsat/sync/data/";
 	}
 
@@ -58,6 +75,8 @@ class WeatherDataModel {
 	 * Returned station data op basis van station ID van de huidige file.
 	**/
 	public function getStationData($stationID, $fromdate, $todate, $type) {
+			$typeIndex = array_search($type, $this->typeIndexes);	// vind de index van het gevraagde type variabele.
+
 			$date1 = new DateTime($fromdate);
 			$date2 = new DateTime($todate);
 
@@ -65,16 +84,21 @@ class WeatherDataModel {
 			$period = new DatePeriod($date1, $interval, $date2);
 
 			$dataBlocks = array();
+			$requestedData = array([],[]);
 
-		// Loop over all datums en zoek in de files voor datablocks.
+		// Loop over alle files heen in de periode en interpreteer de datablocks naar een array.
 		foreach ($period as $readDate) {
 			$readDate = $readDate->format("Y-m-d");
-			array_push($dataBlocks, $this->readfile($readDate, $stationID)); 		// Datablocks in array.
+			$dataArray = $this->readfile($readDate, $stationID);
+			foreach ($dataArray as $dataBlock) {
+				$temp = $this->interp($dataBlock);
+				array_push($requestedData[0], $temp[0]);
+				array_push($requestedData[1], $temp[$typeIndex]); 		// Push type variable to requested data.
+			}
 		}
-		var_dump($dataBlocks);
-		$data = interp($dataBlocks);
+		//var_dump($dataBlocks);
 		// Index of $type in $data. bijv temp geeft temperatuur  als index.
-		return $dataBlocks;
+		return $requestedData;
 	}
 
 	/**
@@ -82,10 +106,11 @@ class WeatherDataModel {
 	**/
 	private function readfile($filename, $station) {
 		$dataBlocks = array();
-		$filename = $this->directory.$station."/".$filename.".dat";
+		//$filename = $this->directory.$station."/".$filename.".dat";
+		$filename = $station."/".$filename.".dat"; // DEBUG
+		
 		if(file_exists($filename))
 		{
-			echo "Reading: ".$filename;
 			$handle = fopen($filename, "r") or die ("Unable to open file" . $filename);		// Open file handle
 			$dataBlocks = [];
 			if ($handle) {
@@ -96,7 +121,6 @@ class WeatherDataModel {
 				}
 			}
 		}
-		
 		return $dataBlocks;
 	}
 

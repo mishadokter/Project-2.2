@@ -86,14 +86,36 @@ class WeatherDataModel {
 			$dataBlocks = array();
 			$requestedData = array([],[]);
 
+			$hour;
+			$total = 0;
+			$count = 0;
+			$skip = true;
+
 		// Loop over alle files heen in de periode en interpreteer de datablocks naar een array.
 		foreach ($period as $readDate) {
 			$readDate = $readDate->format("Y-m-d");
 			$dataArray = $this->readfile($readDate, $stationID);
 			foreach ($dataArray as $dataBlock) {
 				$temp = $this->interp($dataBlock);
-				array_push($requestedData[0], $temp[0]);
-				array_push($requestedData[1], $temp[$typeIndex]); 		// Push type variable to requested data.
+
+				if ($skip) {	// Eerste keer van uitvoeren van de functie.
+					$hour = abs($temp[0]/1000);
+					$skip = false;
+				}
+				if (abs($temp[0]/1000) != $hour){ 			// Als er een nieuw uur begonnen is.
+					$avg = $total / $count;					// Bereken gemiddelde.
+					array_push($requestedData[0], $hour); 	// Push uren
+					array_push($requestedData[1], $total / $count)		// Push average
+
+					$hour = abs($temp[0]/1000);				// Zet nieuwe uur.
+					$total = 0;
+					$count = 0;
+				}	
+				else
+				{
+					$total = $total + $temp[1];
+					$count++;
+				}
 			}
 		}
 		//var_dump($dataBlocks);

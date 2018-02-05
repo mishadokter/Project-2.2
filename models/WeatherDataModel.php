@@ -4,23 +4,39 @@ class WeatherDataModel {
 	function __construct() {
 		$this->date = date('dmy');
 		$this->offsets = [
-			"time" => 14,
-			"tempsign" => 20,
-			"temp" => 21,
-			"dewpsign" => 25,
-			"dewp" => 26,
-			"stp" => 30,
-			"slp" => 35,
-			"visb" => 38,
-			"wdsp" => 42,
-			"prcp" => 45,
-			"sndp" => 49,
-			"frost" => 53,
-			"rain" => 54,
-			"hail" => 55,
-			"thunder" => 56,
-			"tornado" => 57 
+			"time" => [0, 6],
+			"temp" => [7, 3],
+			"dewp" => [11, 3],
+			"stp" => [14, 5],
+			"slp" => [19, 5],
+			"visb" => [24, 4],
+			"wdsp" => [28, 3],
+			"prcp" => [31, 4],
+			"sndp" => [35, 4],
+			"frost" => [39, 1],
+			"rain" => [40, 1],
+			"hail" => [41, 1],
+			"thunder" => [42, 1],
+			"tornado" => [43, 1] 
 		];
+		// Deze array wordt gebruikt om de index te bepalen van de bovenstaande array.
+		$this->typeIndexes = [
+			"time",
+			"temp",
+			"dewp",
+			"stp",
+			"slp",
+			"visb",
+			"wdsp",
+			"prcp",
+			"sndp",
+			"frost",
+			"rain",
+			"hail",
+			"thunder",
+			"tornado"
+		];
+		$this->directory = "/home/dutchsat/sync/data/";
 	}
 
 	public function dump()
@@ -56,40 +72,53 @@ class WeatherDataModel {
 	}
 
 	/**
-	 * Returned stationdata in JSON format
-	 * @param integer $stationID 
-	 * @return json
-	 */
-	public function getStationDataJson($stationID)
-	{
-		$data = $this->getStationData($stationID);
+	 * Returned station data op basis van station ID van de huidige file.
+	**/
+	public function getStationData($stationID, $fromdate, $todate, $type) {
+			$typeIndex = array_search($type, $this->typeIndexes);	// vind de index van het gevraagde type variabele.
+
+			$date1 = new DateTime($fromdate);
+			$date2 = new DateTime($todate);
+
+			$interval = DateInterval::createFromDateString('1 day');
+			$period = new DatePeriod($date1, $interval, $date2);
+
+			$dataBlocks = array();
+			$requestedData = array([],[]);
+
+		// Loop over alle files heen in de periode en interpreteer de datablocks naar een array.
+		foreach ($period as $readDate) {
+			$readDate = $readDate->format("Y-m-d");
+			$dataArray = $this->readfile($readDate, $stationID);
+			foreach ($dataArray as $dataBlock) {
+				$temp = $this->interp($dataBlock);
+				array_push($requestedData[0], $temp[0]);
+				array_push($requestedData[1], $temp[$typeIndex]); 		// Push type variable to requested data.
+			}
+		}
+		//var_dump($dataBlocks);
+		// Index of $type in $data. bijv temp geeft temperatuur  als index.
+		return $requestedData;
 	}
 
 	/**
-	 * Returned station data op basis van station ID van de huidige file.
+	 * Open data file by filename and return it's datablocks
 	**/
-	public function getStationData($stationID) {
-		$dataBlocks = $this->readfile($this->filename); 	// Datablocks in array.
-		$stationData = [];	// Init stationdata array
-
-		foreach ($dataBlocks as $dataBlock) {	// Loop over alle stationdata en filter alle stationdata met StationID
-			//echo $dataBlock."<br>";
-			if (strcmp(substr($dataBlock, 2, 6), $stationID) == 0)
-			{
-				array_push($stationData, $dataBlock);
-			}
-		}
-		return $stationData;
-	}
-
-	private function readfile($filename) {
-		$handle = fopen($filename, "r") or die ("Unable to open file" . $filename);		// Open file handle
-		$dataBlocks = [];
-		if ($handle) {
-			while(!feof($handle)) 	// Terwijl het geen end of file is...
-			{
-				$dd = fgets($handle);	// Lees de file line for line.
-				$dataBlocks = explode(';', $dd);	// Split op ;
+	private function readfile($filename, $station) {
+		$dataBlocks = array();
+		//$filename = $this->directory.$station."/".$filename.".dat";
+		$filename = $station."/".$filename.".dat"; // DEBUG
+		
+		if(file_exists($filename))
+		{
+			$handle = fopen($filename, "r") or die ("Unable to open file" . $filename);		// Open file handle
+			$dataBlocks = [];
+			if ($handle) {
+				while(!feof($handle)) 	// Terwijl het geen end of file is...
+				{
+					$dd = fgets($handle);	// Lees de file line for line.
+					$dataBlocks = explode(';', $dd);	// Split op ;
+				}
 			}
 		}
 		return $dataBlocks;
@@ -101,31 +130,19 @@ class WeatherDataModel {
 	 * @return type
 	 */
 	public function interp($datablock){
-		// Determine signbit values.
-		$signbit = substr($datablock, 20, 1);
-		$temp = substr($datablock, 21, 4);
-		if ($signbit == "1")(int)$temp = -1 * abs((int)$temp);
-		$signbit = substr($datablock, 25, 1);
-		$dewp = substr($datablock, 26, 4);
-		if ($signbit == "1")(int)$dewp = -1 * abs((int)$dewp);
-
-		$dataArray = [
-		"time" => (int)substr($datablock, 14, 6),
-		"temp" => (int)$temp,
-		
-		"stp" => substr($datablock, 30, 5),
-		"slp" => substr($datablock, 35, 5),
-		"visb" => substr($datablock, 38, 4),
-		"wdsp" => substr($datablock, 42, 3),
-		"prcp" => substr($datablock, 45, 4),
-		"sndp" => substr($datablock, 49, 4),
-		"frost" => substr($datablock, 53, 1),
-		"rain" => substr($datablock, 54, 1),
-		"hail" => substr($datablock, 55, 1),
-		"thunder" => substr($datablock, 56, 1),
-		"tornado" => substr($datablock, 57, 1)
-		];
-		echo json_encode($dataArray);
+		$dataArray = array();
+		foreach ($this->offsets as $name => $offset) {
+			if ($name == "temp" || $name == "dewp"){
+				if (substr($datablock, $offset[0]-1, $offset[0]) == "-"){
+					array_push($dataArray, (int)(-1 * abs((int)substr($datablock, $offset[0], $offset[1]))));
+				}
+				else
+					array_push($dataArray, (int)(substr($datablock, $offset[0], $offset[1])));
+			}else {
+				array_push($dataArray, (int)(substr($datablock, $offset[0], $offset[1])));
+			}
+		}
+		return($dataArray);
 	}
 }
 

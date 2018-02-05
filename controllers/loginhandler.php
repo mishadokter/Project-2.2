@@ -20,7 +20,7 @@ include '../inc/database.php';
 			@session_start();
 			$_SESSION['login'] = true;
 			$_SESSION['user_id'] = $user_id;
-			header("location: ../dashboard");
+			header("location: /dashboard.php");
 		}
 		
 	}

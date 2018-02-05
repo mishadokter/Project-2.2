@@ -23,7 +23,7 @@
 		?>
 		<canvas id="testchart"></canvas>
 		<script>
-			$.getJSON("test.php", function(result){
+			$.getJSON("/api.php?type=temp&s=124690&d=8", function(result){
 				console.log("Resultl " +result);
 				var ctx = $("#testchart");
 				var myChart = new Chart(ctx, {

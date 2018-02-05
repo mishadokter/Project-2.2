@@ -7,12 +7,20 @@
 	if($_SESSION['login']) {
 	include 'inc/nav.php'; 
 	
-	// Fetch data from select tag
+	// Fetch data from select option
 	$selected_country = mysqli_real_escape_string($db, $_POST['selected_country']);
+	$query= $db->query("SELECT name FROM stations WHERE country = '".$_POST['selected_country']."'");  
 ?>
 	
 	  <div class="footer">
 		<h1 class="pageTitle">Graph example of <?php echo "$selected_country";?> </h1>
+		<?php 
+		echo "<h4> Weather stations of $selected_country:</h4> ";
+		while($row = $query->fetch_assoc()) {
+            $name	= $row['name'];
+			echo "<p> $name </p>";
+		}
+		?>
 		<canvas id="testchart"></canvas>
 		<script>
 			$.getJSON("test.php", function(result){

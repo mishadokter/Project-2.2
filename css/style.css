@@ -7,17 +7,17 @@
   margin: 20px auto;
   border-radius: 10px;
   border: solid 3px #fff;
-  box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 3px 5px 0 #78B114;
 }
 
 .header {
   min-height: 100px;
 }
 
-	.header img {
-		width: 100% !important;
-		border-radius: 10px 10px 0 0;
-	}
+  .header img {
+    width: 100% !important;
+    border-radius: 10px 10px 0 0;
+  }
 
 .footer {
   min-height: 200px;
@@ -37,72 +37,77 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  background: rgb(58,58,58);
+  background: #78B114;
   border-top: solid 3px #fff;
   border-bottom: solid 3px #fff;
 }
 
-	.navigation li {
-	  float: left;
-	}
+  .navigation li {
+    float: left;
+  }
 
-		.navigation li:hover {
-		  background: #222;
-		}
+    .navigation li:hover {
+      background: #000;
+    }
 
-		.navigation li:first-child {
-		  -webkit-border-radius: 5px 5px 0 0;
-		  border-radius: 5px 0 0 5px;
-		}
+    .navigation li:first-child {
+      -webkit-border-radius: 5px 5px 0 0;
+      border-radius: 5px 0 0 5px;
+    }
 
-	.navigation li a {
-	  display: block;
-	  padding: 0 20px;
-	  text-decoration: none;
-	  line-height: 40px;
-	  color: #fff;
-	}
+  .navigation li a {
+    display: block;
+    padding: 0 20px;
+    text-decoration: none;
+    line-height: 40px;
+    color: #000;
+    font-weight: 900;
+  }
+    
+    .navigation li a:hover {
+      color: #8EB737;
+    }
 
-	.navigation ul {
-	  display: none;
-	  position: absolute;
-	  list-style: none;
-	  margin-left: -3px;
-	  padding: 0;
-	  overflow: hidden;
-	}
+  .navigation ul {
+    display: none;
+    position: absolute;
+    list-style: none;
+    margin-left: -3px;
+    padding: 0;
+    overflow: hidden;
+  }
 
-	.navigation ul li {
-	  float: none;
-	}
+  .navigation ul li {
+    float: none;
+  }
 
-		.navigation li:hover > ul {
-		  display: block;
-		  background: #222;
-		  border: solid 3px #fff;
-		  border-top: 0;
-		  
-		  -webkit-border-radius: 0 0 8px 8px;
-		  border-radius: 0 0 8px 8px;
-		  
-		  -webkit-box-shadow:  0px 3px 3px 0px rgba(0, 0, 0, 0.25);
-		  box-shadow:  0px 3px 3px 0px rgba(0, 0, 0, 0.25);
-		}
+    .navigation li:hover > ul {
+      display: block;
+      background: #222;
+      border: solid 3px #fff;
+      border-top: 0;
+      
+      -webkit-border-radius: 0 0 8px 8px;
+      border-radius: 0 0 8px 8px;
+      
+      -webkit-box-shadow:  0px 3px 3px 0px rgba(0, 0, 0, 0.25);
+      box-shadow:  0px 3px 3px 0px rgba(0, 0, 0, 0.25);
+    }
 
-		.navigation li:hover > ul li:hover {
-		  -webkit-border-radius: 0 0 5px 5px;
-		  border-radius: 0 0 5px 5px;
-		}
+    .navigation li:hover > ul li:hover {
+      -webkit-border-radius: 0 0 5px 5px;
+      border-radius: 0 0 5px 5px;
+    }
 
-		.navigation li li a:hover {
-		  background: #000;
-		}
+    .navigation li li a:hover {
+      background: #000;
+    }
 
-		.navigation ul li:last-child a,
-		.navigation ul li:last-child a:hover {
-		  -webkit-border-radius: 0 0 5px 5px;
-		  border-radius: 0 0 5px 5px;
-		}
+    .navigation ul li:last-child a,
+    .navigation ul li:last-child a:hover {
+      -webkit-border-radius: 0 0 5px 5px;
+      border-radius: 0 0 5px 5px;
+    }
 
 .login-page {
   width: 360px;
@@ -193,7 +198,6 @@ select .selected_Country{
 .blue:hover {
   background-color: #6FC6FF;
 }
-
 select {
   font-family: "Roboto", 
   sans-serif; 

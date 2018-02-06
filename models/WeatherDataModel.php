@@ -112,7 +112,7 @@ class WeatherDataModel {
 					$total = 0;
 				}
 				else {
-					$total = $total + $temp[1];
+					$total = $total + $temp[$typeIndex];
 					$count++;
 				}
 			}

@@ -25,7 +25,7 @@
 			$query = "/api.php?"+"type="+getv('type')+"&d="+getv('d')+"&s="+getv('s');
 			console.log($query);
 			$.getJSON($query, function(result){
-				console.log("Resultl " +result);
+				console.log("Result " +result);
 				var ctx = $("#testchart");
 				var myChart = new Chart(ctx, {
 					type: "line",
@@ -34,10 +34,10 @@
 						labels: result[0],
 						datasets: [{
 							data: result[1],
-							label: "Temperature ℃",
+							label: "Temperature℃",
 							borderwidth: 1,
 							borderColor: [
-							'rgba(255,99,132,1)'
+							'rgba(120, 177, 20, 1)'
 							]
 						}]
 						

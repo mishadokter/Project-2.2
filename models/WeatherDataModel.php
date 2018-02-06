@@ -105,6 +105,7 @@ class WeatherDataModel {
 				if ($type == "humid"){		// Humidity exception
 					$temperature = $temp[1];
 					$dewp = $temp[2];
+
 					$temp[1] = 100*(exp((17.625*$dewp)/(243.04+$dewp))/exp((17.625*$temperature)/(243.04+$temperature)));
 				}
 				if((int)abs($temp[0]/10000) != $hour) {	// Deel op in blokken van een uur.

@@ -11,6 +11,7 @@
 	  <div class="footer">
 		<h1 class="pageTitle">Graph example</h1>
 		<canvas id="testchart"></canvas>
+		
 		<script>
 			function getv(variable)
 			{
@@ -22,6 +23,8 @@
 	       		}
       		 	return(false);
 			}
+			$caption = 'null';
+			if (getv('type') == 'temp') {$caption = "Temperature"}else{$caption = "Humidity"}
 			$query = "/api.php?"+"type="+getv('type')+"&d="+getv('d')+"&s="+getv('s');
 			console.log($query);
 			$.getJSON($query, function(result){
@@ -34,7 +37,7 @@
 						labels: result[0],
 						datasets: [{
 							data: result[1],
-							label: "Temperature℃",
+							label: $caption,
 							borderwidth: 1,
 							borderColor: [
 							'rgba(120, 177, 20, 1)'
@@ -56,7 +59,18 @@
 				}
 			
 			)});
+
 		</script>
+		<script>
+			$(document).ready(function() {
+			  $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
+			  
+			  setTimeout(function(){
+			   window.location.reload(1);
+			}, 15000);
+			});
+		</script>
+		<script src="/libs/jquery-3.3.1.min.js"></script>
 	</body>
 </html>
 

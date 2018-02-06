@@ -6,15 +6,26 @@
 	@session_start();
 	if($_SESSION['login']) {
 	include 'inc/nav.php'; 
+	
+	// Start with fetching data from the database
+	$sql = "SELECT username, name, country, user_stations.user_id AS user_id, user_stations.station_id AS station_id
+			FROM stations, users, user_stations
+			WHERE user_stations.user_id = users.id
+			AND user_stations.station_id = stations.stn";
+	
+	$result = $db->query($sql);
+	
+	while($row = $result->fetch_assoc()) {
+		
+		$username		= $row["username"];
+		$country      	= $row["country"];
+		$region			= $row["name"];
+	}
 	?>
 	
 	  <div class="footer">
 		<h1 class="pageTitle">Dashboard</h1>
 		<p>
-			<div id="buttons">
-				  <a href="dashboard.php?line1" class="btn blue">Line graph 1</a>
-				  <a href="dashboard.php?line2" class="btn blue">Line graph 2</a>
-			</div>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc nulla massa, finibus id urna quis, mattis consectetur tortor. 
 		Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed lobortis metus vel pretium sagittis.
 		Vestibulum consectetur arcu mi, a pulvinar nisi consequat id. Aliquam erat volutpat. Donec sagittis dui tortor, non convallis augue vehicula vitae. 
@@ -24,31 +35,35 @@
 		Sed pellentesque nunc diam, ac aliquet turpis rhoncus eu. Vestibulum molestie nunc a sem placerat faucibus vitae quis dolor.<br><br>
 		Our weatherservice contains 230 countries/regions and 8000 weather stations </p>
 		
-		<?php 
-		if(isset($_GET['line1'])) { 
-			echo "<p> Line Graph <b> 1 </b> is clicked </p>";
-		}
-		
-		if(isset($_GET['line2'])) { 
-			echo "<p> Line Graph <b> 2 </b> is clicked </p>";
-		}
-		
-		?>
 	  </div>
 	  
-	  <form action="graphexample.php" method="POST">
-	  <select name="selected_country" style='font-family: "Roboto", sans-serif; outline: 0; background: #f2f2f2; width: 100%; border: 150px; margin: 0 0 15px; 
-	  padding: 15px; box-sizing: border-box; font-size: 14px'required>
+	  <form action="stationgraph.php" method="GET">
+	  <select name="s" required>
 		<option value=""> --- Choose a country or region --- </option>
             <?php 
 			$user_id = $_SESSION['user_id'];
-			$query= $db->query("SELECT country from stations INNER JOIN user_stations ON user_stations.station_id=stations.stn WHERE user_id = $user_id ORDER BY country ASC");  
+			$query= $db->query("SELECT stations.name, stations.stn from stations INNER JOIN user_stations ON user_stations.station_id=stations.stn WHERE user_id = $user_id");
              while ($rows = $query->fetch_array(MYSQLI_ASSOC)) {
-                 $value= $rows['country']; ?>
-                <option value="<?= $value?>" ><?= $value?></option>
-                <?php  } ?>
+                $value= $rows['country']; ?>
+                <option value=<?=$rows['stn'];?>><?=$rows['name'];?></option>
+                <?php } ?>
              </select>
-				<input type="submit" name="login" class="selected_Country" value="Submit!">
+             <select name="type" required>
+	  			<option value=""> --- Choose a data type --- </option>
+             	<option value="temp">Temperature</option>
+             	<option value="humid">Humidity</option>
+             </select>
+             <select name="d" id="" required>
+             	<option value=""> --- Over a period of --- </option>
+             	<option value="1">1 Day</option>
+             	<option value="2">2 Days</option>
+             	<option value="3">3 Days</option>
+             	<option value="4">4 Days</option>
+             	<option value="5">5 Days</option>
+             	<option value="6">6 Days</option>
+             	<option value="7">7 Days</option>
+             </select>
+				<input type="submit" class="selected_Country" value="Submit!">
 			 </form>
 			 
 	<?php if(isset($_POST['selected_country']))

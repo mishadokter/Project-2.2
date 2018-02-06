@@ -36,7 +36,7 @@ class WeatherDataModel {
 			"thunder",
 			"tornado"
 		];
-		$this->directory = "/home/dutchsat/sync/data/";
+		$this->directory = "/mnt/sync/";
 	}
 
 	public function dump()
@@ -86,7 +86,7 @@ class WeatherDataModel {
 			$dataBlocks = array();
 			$requestedData = array([],[]);
 
-			$hour;
+			$hour = -1;
 			$total = 0;
 			$count = 0;
 			$skip = true;
@@ -98,21 +98,20 @@ class WeatherDataModel {
 			foreach ($dataArray as $dataBlock) {
 				$temp = $this->interp($dataBlock);
 
-				if ($skip) {	// Eerste keer van uitvoeren van de functie.
-					$hour = abs($temp[0]/1000);
+				if($skip){
+					$hour = (int)abs($temp[0]/10000);
 					$skip = false;
 				}
-				if (abs($temp[0]/1000) != $hour){ 			// Als er een nieuw uur begonnen is.
-					$avg = $total / $count;					// Bereken gemiddelde.
-					array_push($requestedData[0], $hour); 	// Push uren
-					array_push($requestedData[1], $total / $count)		// Push average
+				if((int)abs($temp[0]/10000) != $hour) {	// Deel op in blokken van een uur.
+					$avg = $total / $count;
+					array_push($requestedData[0], $hour.":00");
+					array_push($requestedData[1], $total / $count);
 
-					$hour = abs($temp[0]/1000);				// Zet nieuwe uur.
-					$total = 0;
+					$hour = (int)abs($temp[0] / 10000);
 					$count = 0;
-				}	
-				else
-				{
+					$total = 0;
+				}
+				else {
 					$total = $total + $temp[1];
 					$count++;
 				}
@@ -128,9 +127,8 @@ class WeatherDataModel {
 	**/
 	private function readfile($filename, $station) {
 		$dataBlocks = array();
-		//$filename = $this->directory.$station."/".$filename.".dat";
-		$filename = $station."/".$filename.".dat"; // DEBUG
-		
+		$filename = $this->directory.$station."/".$filename.".dat";
+		//$filename = $station."/".$filename.".dat"; // DEBUG
 		if(file_exists($filename))
 		{
 			$handle = fopen($filename, "r") or die ("Unable to open file" . $filename);		// Open file handle

@@ -8,6 +8,6 @@
 <body class="wrapper">
   
   <div class="header">
-	<a href="index.php"><img src="img/Dutchsat.jpg" alt="Not found"/></a>
+	<a href="index.php"><img src="img/Dutchsat.png" alt="Not found"/></a>
   </div>
 <!-- Nav bar -->

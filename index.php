@@ -4,11 +4,14 @@
 	include 'inc/nav.php'; ?>
 	
 	  <div class="footer">
-		<h1 class="pageTitle">Taiwan Fertilizer Co. LTD. </h1>
-		<p>Taiwan Fertilizer company is established on May 1st, 1946. Originally a state-owned enterprise under the Ministry of Economic Affairs (MOEA), 
-		it was privatized on September 1, 1999, and is now a listed private corporation. The company, currently capitalized at NT$9.8 billion, is headquartered in Taipei. 
-		Its four factories are: Keelung, Miaoli, Hualien and Taichung respectively. Producing various types of fertilizers and chemical products. <br> <br>
-		The electronic-class chemicals plant was completed in January 2001, and has been supplying chemicals to domestic LCD and semiconductor manufacturers.</p>
+		<h1 class="pageTitle">Lorem Ipsum</h1>
+		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc nulla massa, finibus id urna quis, mattis consectetur tortor. 
+		Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed lobortis metus vel pretium sagittis.
+		Vestibulum consectetur arcu mi, a pulvinar nisi consequat id. Aliquam erat volutpat. Donec sagittis dui tortor, non convallis augue vehicula vitae. 
+		Nulla ante ligula, aliquam eu laoreet vel, consectetur nec ante. <br> <br> Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. 
+		Aenean pretium massa eu metus rhoncus, et facilisis risus bibendum. Nulla aliquam viverra est, quis ornare nisl lobortis et. 
+		Duis in eros at leo bibendum pellentesque eget non metus. 
+		Sed pellentesque nunc diam, ac aliquet turpis rhoncus eu. Vestibulum molestie nunc a sem placerat faucibus vitae quis dolor.</p>
 	  </div>
   
 	<?php

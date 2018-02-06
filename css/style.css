@@ -7,7 +7,7 @@
   margin: 20px auto;
   border-radius: 10px;
   border: solid 3px #fff;
-  box-shadow: 0 3px 5px 0 #78B114;
+  box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.1);
 }
 
 .header {
@@ -37,7 +37,7 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  background: #78B114;
+  background: rgb(58,58,58);
   border-top: solid 3px #fff;
   border-bottom: solid 3px #fff;
 }
@@ -47,7 +47,7 @@
 	}
 
 		.navigation li:hover {
-		  background: #000;
+		  background: #222;
 		}
 
 		.navigation li:first-child {
@@ -60,13 +60,8 @@
 	  padding: 0 20px;
 	  text-decoration: none;
 	  line-height: 40px;
-	  color: #000;
-	  font-weight: 900;
+	  color: #fff;
 	}
-		
-		.navigation li a:hover {
-			color: #8EB737;
-		}
 
 	.navigation ul {
 	  display: none;
@@ -197,4 +192,17 @@ select .selected_Country{
 
 .blue:hover {
   background-color: #6FC6FF;
+}
+
+select {
+  font-family: "Roboto", 
+  sans-serif; 
+  outline: 0; 
+  background: #f2f2f2; 
+  width: 100%; 
+  border: 150px; 
+  margin: 0 0 15px; 
+  padding: 15px; 
+  box-sizing: border-box; 
+  font-size: 14px
 }

@@ -102,6 +102,11 @@ class WeatherDataModel {
 					$hour = (int)abs($temp[0]/10000);
 					$skip = false;
 				}
+				if ($type == "humid"){		// Humidity exception
+					$temperature = $temp[1];
+					$dewp = $temp[2];
+					$temp[1] = 100*(exp((17.625*$dewp)/(243.04+$dewp))/exp((17.625*$temperature)/(243.04+$temperature)));
+				}
 				if((int)abs($temp[0]/10000) != $hour) {	// Deel op in blokken van een uur.
 					$avg = $total / $count;
 					array_push($requestedData[0], $hour.":00");
@@ -112,7 +117,10 @@ class WeatherDataModel {
 					$total = 0;
 				}
 				else {
-					$total = $total + $temp[$typeIndex];
+					if ($type=="humid")
+						$total = $total + $temp[1];
+					else
+						$total = $total + $temp[$typeIndex];
 					$count++;
 				}
 			}

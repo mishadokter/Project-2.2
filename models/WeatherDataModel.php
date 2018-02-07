@@ -1,5 +1,4 @@
 <?php
-
 class WeatherDataModel {
 	function __construct() {
 		$this->date = date('dmy');
@@ -37,39 +36,59 @@ class WeatherDataModel {
 			"tornado"
 		];
 		$this->directory = "/mnt/sync/";
-	}
-
-	public function dump()
-	{
-		echo $this->date;
-		$handle = fopen($this->filename, "r") or die ("unable to read file". $this->filename);
-		if ($handle) {
-			while(!feof($handle)) 
-			{
-				$dd = fgets($handle);
-				$dataBlocks = explode(';', $dd);
-				foreach ($dataBlocks as $dataBlock) {
-					echo($dataBlock."<br>");
-				}
-			}	
-		}
+		$this->db = mysqli_connect("localhost", "jeroen", "1234HvP", "unwdmi") or die("At this moment, no valid database connection can be found. Please try again later!");
 	}
 
 	/**
-	 * Vraag data van meerdere stations tegelijk op
-	 * param: array
-	 * returns: array
-	 * */
-	public function getMultipleStationData($stationIDs){
-		if (gettype($stationIDs) != "array") return null;	// Return null if not array.
-		$stationsData = [];
-		foreach ($stationIDs as $stationID) {
-			foreach ($this->getStationData($stationID) as $stationData) {
-				array_push($stationsData, $stationData);
-			}
+	 * Request what stations have a higher than 80% dewpoint
+	 * Parameter: string - country in question
+	 * Returns: Array - Array of stations.
+	 **/
+	public function highDewPointStations($country) {
+		$boundary = 80;		// Dauwpunt percentage.
+
+		$sql = "SELECT stn FROM stations WHERE country = '$country'";
+
+		$result = $this->db->query($sql);
+		$stations = array();
+		$stationData = array();
+		$historicDate = date('Y-m-d', strtotime(' -5 day'));
+		$today = date('Y-m-d');
+		while($row = $result->fetch_assoc()) {
+			$stationData[$row['stn']] = $this->getStationData($row['stn'], $historicDate, $today, 'humid')[1];
 		}
-		return $stationsData;
+		foreach($stationData as $station => $humidity) {
+			$total = 0;
+			$avg = 0;
+			$count = 0;
+			foreach ($humidity as $value) {
+				$total += $value;
+				$count++;
+			}
+			$avg = $total / $count;
+			if ($avg > 80)
+				array_push($stations, $station);
+		}
+		return $stations;
 	}
+
+	/**
+	 * Returns a 2 day temperature history of stations with a higher dewpoint than 80%.
+	 * @param string $country 
+	 * @return array
+	 */
+	public function dewPointOverview($country) {
+		$stations = $this->highDewPointStations($country);		// Get stations with high dewpoint
+		$historicDate = date('Y-m-d', strtotime(' -5 day'));	// 2 day history
+		$today = date('Y-m-d');
+		$data = array();
+
+		foreach ($stations as $station) {
+			array_push($data, array($station => $this->getStationData($station, $historicDate, $today, 'temp')));
+		}
+		return $data;
+	}
+
 
 	/**
 	 * Returned station data op basis van station ID van de huidige file.
@@ -105,7 +124,8 @@ class WeatherDataModel {
 				if ($type == "humid"){		// Humidity exception
 					$temperature = $temp[1];
 					$dewp = $temp[2];
-					$temp[1] = 100*(exp((17.625*$dewp)/(243.04+$dewp))/exp((17.625*$temperature)/(243.04+$temperature)));
+
+					$temp[1] = 100-5*($temperature - $dewp);
 				}
 				if((int)abs($temp[0]/10000) != $hour) {	// Deel op in blokken van een uur.
 					$avg = $total / $count;

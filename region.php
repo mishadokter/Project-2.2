@@ -11,10 +11,12 @@
 	<div class="footer">
 	<h1 class="pageTitle">Region overview.</h1>
 	<h3>Select a region</h3>
-	<form action=<?php echo $_SERVER['PHP_SELF']; ?> method="get" accept-charset="utf-8">
-		<select name="r" multiple>
-			<?php //todo for loop over continenten ?>
+	<form action=regionoverview.php method="get" accept-charset="utf-8">
+		<select name="country" id="">
+			<option value="taiwan">Taiwan</option>
+			<option value="africa">Africa</option>
 		</select>
+		<input type="submit" value="Submit">
 	</form>
 	
 

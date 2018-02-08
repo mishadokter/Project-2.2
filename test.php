@@ -1,52 +1,32 @@
 <?php
+
 include 'models/WeatherDataModel.php';
 
-$weatherModel = new WeatherDataModel();
-$weatherModel->interp("124807-002-059099461018301040640016044111000826325;");
-
+$Weathermodel = new WeatherDataModel();
+$data = $Weathermodel->dewPointOverview("africa");
+$th = '';
+$tb = '';
+echo '<pre>' . var_export($data, true) . '</pre>';
+$th = "<th>".$data[0][1]."</th>";
+foreach ($data as $station => $dataArray) {
+	foreach ($dataArray as $time => $value) {
+		$tb += "<tr><td>".$station."</td>";
+		$tb += "<td>".$value[1][0]."</td>";
+		$tb += "</tr>";
+	}
+}
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>test</title>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script> 
-
-</head>
-<body>
-	<canvas id="testchart" width="400" height="400"></canvas>
-
-
-<script>
-	$.getJSON("/Project2-2/api/test.php", function(result){
-		console.log(result);
-		var ctx = $("#testchart");
-		var myChart = new Chart(ctx, {
-			type: "line",
-			responsive: true,
-			data: {
-				labels: result[0],
-				datasets: [{
-					data: result[1],
-					label: "test data",
-					borderwidth: 1
-				}]
-				
-			},
-			options: {
-		        scales: {
-		            yAxes: [{
-		                ticks: {
-		                    beginAtZero:true
-		                }
-		            }]
-		        }
-	    	}
-		}
-	
-	)});
-</script>
-</body>
-</html>
+<table>
+	<caption>table title and/or explanatory text</caption>
+	<thead>
+		<tr>
+			<th><?=$th;?></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<?=$tb;?>
+		</tr>
+	</tbody>
+</table>

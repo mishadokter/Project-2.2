@@ -1,23 +1,22 @@
 <?php
-
 class WeatherDataModel {
 	function __construct() {
 		$this->date = date('dmy');
 		$this->offsets = [
 			"time" => [0, 6],
-			"temp" => [7, 3],
-			"dewp" => [11, 3],
-			"stp" => [14, 5],
-			"slp" => [19, 5],
-			"visb" => [24, 4],
+			"temp" => [7, 2],
+			"dewp" => [11, 2],
+			"stp" => [14, 4],
+			"slp" => [19, 4],
+			"visb" => [24, 3],
 			"wdsp" => [28, 3],
-			"prcp" => [31, 4],
-			"sndp" => [35, 4],
-			"frost" => [39, 1],
-			"rain" => [40, 1],
-			"hail" => [41, 1],
-			"thunder" => [42, 1],
-			"tornado" => [43, 1] 
+			"prcp" => [32, 2],
+			"sndp" => [36, 4],
+			"frost" => [41, 1],
+			"rain" => [42, 1],
+			"hail" => [43, 1],
+			"thunder" => [44, 1],
+			"tornado" => [45, 1] 
 		];
 		// Deze array wordt gebruikt om de index te bepalen van de bovenstaande array.
 		$this->typeIndexes = [
@@ -36,40 +35,62 @@ class WeatherDataModel {
 			"thunder",
 			"tornado"
 		];
-		$this->directory = "/mnt/sync/";
-	}
-
-	public function dump()
-	{
-		echo $this->date;
-		$handle = fopen($this->filename, "r") or die ("unable to read file". $this->filename);
-		if ($handle) {
-			while(!feof($handle)) 
-			{
-				$dd = fgets($handle);
-				$dataBlocks = explode(';', $dd);
-				foreach ($dataBlocks as $dataBlock) {
-					echo($dataBlock."<br>");
-				}
-			}	
-		}
+		$this->directory = "/mnt/sync/data";
+		$this->db = mysqli_connect("localhost", "jeroen", "1234HvP", "unwdmi") or die("At this moment, no valid database connection can be found. Please try again later!");
 	}
 
 	/**
-	 * Vraag data van meerdere stations tegelijk op
-	 * param: array
-	 * returns: array
-	 * */
-	public function getMultipleStationData($stationIDs){
-		if (gettype($stationIDs) != "array") return null;	// Return null if not array.
-		$stationsData = [];
-		foreach ($stationIDs as $stationID) {
-			foreach ($this->getStationData($stationID) as $stationData) {
-				array_push($stationsData, $stationData);
-			}
+	 * Request what stations have a higher than 80% dewpoint
+	 * Parameter: string - continent in question
+	 * Returns: Array - Array of stations.
+	 **/
+	public function highDewPointStations($continent) {
+		$boundary = 80;		// Dauwpunt percentage.
+
+		$sql = "SELECT stn, name FROM stations WHERE continent = '$continent'";
+
+		$result = $this->db->query($sql);
+		$stations = array();
+		$stationData = array();
+		$historicDate = date('Y-m-d', strtotime(' -5 day'));
+		$today = date('Y-m-d');
+		while($row = $result->fetch_assoc()) {
+			array_push($stationData, array($row['name'], $this->getStationData($row['stn'], $historicDate, $today, 'humid')[1]));
 		}
-		return $stationsData;
+		echo '<pre>' . var_export($stationData, true) . '</pre>';
+		foreach($stationData as $station) {
+			$total = 0;
+			$avg = 0;
+			$count = 0;
+			foreach ($station[1] as $value) {
+				$total += $value;
+				$count++;
+			}
+			$avg = $total / $count;
+			if ($avg > 80)
+				array_push($stations, $station);
+		}
+
+		return $stations;
 	}
+
+	/**
+	 * Returns a 2 day temperature history of stations with a higher dewpoint than 80%.
+	 * @param string $country 
+	 * @return array
+	 */
+	public function dewPointOverview($continent) {
+		$stations = $this->highDewPointStations($continent);		// Get stations with high dewpoint
+		$historicDate = date('Y-m-d', strtotime(' -5 day'));	// 2 day history
+		$today = date('Y-m-d');
+		$data = array();
+
+		foreach ($stations as $station) {
+			array_push($data, array($station => $this->getStationData($station, $historicDate, $today, 'temp')));
+		}
+		return $data;
+	}
+
 
 	/**
 	 * Returned station data op basis van station ID van de huidige file.
@@ -106,7 +127,7 @@ class WeatherDataModel {
 					$temperature = $temp[1];
 					$dewp = $temp[2];
 
-					$temp[1] = 100*(exp((17.625*$dewp)/(243.04+$dewp))/exp((17.625*$temperature)/(243.04+$temperature)));
+					$temp[1] = 100-5*($temperature - $dewp);
 				}
 				if((int)abs($temp[0]/10000) != $hour) {	// Deel op in blokken van een uur.
 					$avg = $total / $count;
